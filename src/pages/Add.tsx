@@ -1,24 +1,34 @@
 import {
+  IonAccordion,
+  IonAccordionGroup,
   IonButton,
+  IonButtons,
   IonContent,
+  IonDatetime,
+  IonDatetimeButton,
   IonFooter,
   IonHeader,
   IonIcon,
   IonInput,
   IonItem,
   IonLabel,
+  IonList,
+  IonModal,
   IonPage,
   IonText,
   IonTitle,
   IonToolbar,
   useIonAlert,
 } from "@ionic/react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "./Add.css";
 import { cloudUpload } from "ionicons/icons";
 import api from "../api/Posts";
 import { IonAlert } from "@ionic/react";
-import { error } from "console";
+import { error, log } from "console";
+import { format, utcToZonedTime } from "date-fns-tz";
+import {  parseISO } from 'date-fns';
+
 const Add: React.FC = () => {
   const [name, setName] = useState("");
   const [birthday, setBirthDay] = useState("");
@@ -41,7 +51,10 @@ const Add: React.FC = () => {
         console.log(error);
       });
   };
-
+  const datetime = useRef<null | HTMLIonDatetimeElement>(null);
+  const confirm = () => {
+    datetime.current?.confirm();
+  };
   return (
     <IonPage>
       <IonHeader>
@@ -51,21 +64,44 @@ const Add: React.FC = () => {
           </IonTitle>
         </IonToolbar>
       </IonHeader>
+
       <IonContent fullscreen>
-        <IonItem>
-          <IonLabel position="stacked">NAME</IonLabel>
-          <IonInput
-            placeholder="Enter Name"
-            onIonChange={(e: any) => setName(e.detail.value)}
-          ></IonInput>
-        </IonItem>
-        <IonItem>
-          <IonLabel position="stacked">BIRTHDAY</IonLabel>
-          <IonInput
-            placeholder="Enter BirthDay"
-            onIonChange={(e: any) => setBirthDay(e.detail.value)}
-          ></IonInput>
-        </IonItem>
+        <IonList inset={true}>
+          <IonItem>
+            <IonLabel position="stacked">NAME</IonLabel>
+            <IonInput
+              placeholder="Enter Name"
+              onIonChange={(e: any) => setName(e.detail.value)}
+            ></IonInput>
+          </IonItem>
+        </IonList>
+
+        <IonList inset={true}>
+          <IonAccordionGroup>
+            <IonAccordion value="start">
+              <IonItem lines="inset" slot="header">
+                <IonLabel>Ngày sinh</IonLabel>
+                <IonDatetimeButton
+                  slot="end"
+                  datetime="start-date"
+                ></IonDatetimeButton>
+              </IonItem>
+              {}
+              <IonDatetime
+                id="start-date"
+                slot="content"
+                presentation="date"
+                
+                onIonChange={(e:any) => {
+                  console.log(e.detail.value)
+                  setBirthDay(e.detail.value)
+                }}
+              ></IonDatetime>
+            </IonAccordion>
+          </IonAccordionGroup>
+
+          
+        </IonList>
       </IonContent>
       <IonFooter>
         <IonItem id="button">
