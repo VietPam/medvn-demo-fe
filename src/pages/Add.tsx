@@ -31,7 +31,9 @@ import {  parseISO } from 'date-fns';
 
 const Add: React.FC = () => {
   const [name, setName] = useState("");
-  const [birthday, setBirthDay] = useState("");
+  const today = new Date();
+  today.setFullYear(today.getFullYear()-18)
+  const [birthday, setBirthDay] = useState(today.toJSON());
   const [salary, setSalary] = useState<number>();
 
   const [Alert] = useIonAlert();
@@ -55,6 +57,8 @@ const Add: React.FC = () => {
   const confirm = () => {
     datetime.current?.confirm();
   };
+ 
+
   return (
     <IonPage>
       <IonHeader>
@@ -86,18 +90,20 @@ const Add: React.FC = () => {
                   datetime="start-date"
                 ></IonDatetimeButton>
               </IonItem>
-              {}
+              
               <IonDatetime
                 id="start-date"
                 slot="content"
                 presentation="date"
-                
+                value={birthday}
+                max={today.toJSON()}
                 onIonChange={(e:any) => {
-                  console.log(e.detail.value)
+                  console.log(today.toJSON())
+                  
                   setBirthDay(e.detail.value)
                 }}
               ></IonDatetime>
-            </IonAccordion>
+            </IonAccordion>   
           </IonAccordionGroup>
 
           
